@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <title>Title</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100&display=swap" rel="stylesheet">
+
+    <meta property="og:title" content="Searching "/>
+    <meta property="og:description" content="Seraching player"/>
+    <meta property="og:image" content="../static/다운로드.jpeg)"/>
+    <style>
+        .maininputcontainer {
+            width: 700px;
+            align-self: center;
+        }
+
+        .margintop20 {
+            margin-top: 20px;
+        }
+
+        * {
+            font-family: 'Koulen', cursive;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .ft {
+            font-size: 80px;
+        }
+
+        .width {
+            width: 70%;
+            align-self: center;
+        }
+
+        .boxassemble {
+            align-content: center;
+        }
+    </style>
+    <script>
+
+        $(document).ready(function () {
+
+        });
+
+        function searching() {
+            $('#card-box').empty()
+            $.ajax({
+                type: "POST",
+                url: "/searching_in",
+                data: {
+                    searching_give: $('#searching-box').val(),
+                },
+                success: function (response) {
+                    let infos = response['team']
+                    let infos1 = response['player']
+
+
+                    for (let i = 0; i < infos.length; i++) {
+                        let name = infos[i]['Player']
+                        let nation = infos[i]['Nation']
+                        let group = infos[i]['GROUP']
+                        let pos = infos[i]['Pos']
+                        let no = infos[i]['No']
+                        let age = infos[i]['Age']
+                        let A = infos[i]['A match caps']
+                        let Am = infos[i]['A match goals']
+                        let club = infos[i]['Club']
+                        let image = infos[i]['image_url']
+
+
+                        let temp_html = `
+                        <div class="box">
+            <article class="media">
+                <div class="media-left">
+                    <figure class="image is-64x64">
+                        <img src="${image}" alt="Image">
+                    </figure>
+                </div>
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <strong><a>${name}</a></strong> <small>${nation}</small>
+                            <br>
+                            group : ${group},    pos : ${pos},    no : ${no},    age : ${age},    A match caps : ${A},    Amatch goals : ${Am},    club:${club}
+
+
+                        </p>
+                    </div>
+                    <nav class="level is-mobile">
+                        <div class="level-left">
+                            <a class="level-item" aria-label="reply">
+            <span class="icon is-small">
+              <i class="fas fa-reply" aria-hidden="true"></i>
+            </span>
+                            </a>
+                            <a class="level-item" aria-label="retweet">
+            <span class="icon is-small">
+              <i class="fas fa-retweet" aria-hidden="true"></i>
+            </span>
+                            </a>
+                            <a class="level-item" aria-label="like">
+            <span class="icon is-small">
+              <i class="fas fa-heart" aria-hidden="true"></i>
+            </span>
+                            </a>
+                        </div>
+                    </nav>
+                </div>
+            </article>
+        </div>
+                        `
+
+                        $("#card-box").append(temp_html)
+                    }
+                    for (let i = 0; i < infos1.length; i++) {
+                        let name = infos1[i]['Player']
+                        let nation = infos1[i]['Nation']
+                        let group = infos1[i]['GROUP']
+                        let pos = infos1[i]['Pos']
+                        let no = infos1[i]['No']
+                        let age = infos1[i]['Age']
+                        let A = infos1[i]['A match caps']
+                        let Am = infos1[i]['A match goals']
+                        let club = infos1[i]['Club']
+
+                        let image = infos1[i]['image_url']
+
+                        let temp_html = `
+                        <div class="box">
+            <article class="media">
+                <div class="media-left">
+                    <figure class="image is-64x64">
+                        <a href="${image}"><img src="${image}" alt="Image"></a>
+                    </figure>
+                </div>
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <strong><a>${name}</a></strong> <small>${nation}</small>
+                            <br>
+                            group : ${group},    pos : ${pos},    no : ${no},    age : ${age},    A match caps : ${A},    Amatch goals : ${Am},    club:${club}
+
+                        </p>
+                    </div>
+                    <nav class="level is-mobile">
+                        <div class="level-left">
+                            <a class="level-item" aria-label="reply">
+            <span class="icon is-small">
+              <i class="fas fa-reply" aria-hidden="true"></i>
+            </span>
+                            </a>
+                            <a class="level-item" aria-label="retweet">
+            <span class="icon is-small">
+              <i class="fas fa-retweet" aria-hidden="true"></i>
+            </span>
+                            </a>
+                            <a class="level-item" aria-label="like">
+            <span class="icon is-small">
+              <i class="fas fa-heart" aria-hidden="true"></i>
+            </span>
+                            </a>
+                        </div>
+                    </nav>
+                </div>
+            </article>
+        </div>
+                        `
+
+
+                        $("#card-box").append(temp_html)
+                    }
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <div id="navMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href='/'>
+                    Home
+                </a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-dark" href='/login'>login</a>
+                        <a class="button is-link" href='/mypage'>mypage</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="hero is-info is-bold has-text-centered is-bold">
+    <div class="hero-body">
+        <p class="title ft">
+            2022 World Cup in Qatar
+        </p>
+    </div>
+</section>
+
+
+<section class="hero is-link is-fullheight-with-navbar is-bold">
+
+    <p class="title has-text-centered maininputcontainer margintop20">
+
+        <p1 class=""> Searching your team</p1>
+
+        <input id="searching-box" class="input is-primary margintop20 " type="text" placeholder="">
+
+        <button class="button is-info is-rounded margintop20" onclick="searching()">Searching</button>
+
+    <div id="card-box" class="boxassemble width">
+
+
+        <div class="box">
+            Search your preferred country for a list of players / Log in to register your players. / Register in My Page
+        </div>
+
+
+    </div>
+    </p>
+
+    <br>
+    <br>
+</section>
+
+
+</body>
+</html>

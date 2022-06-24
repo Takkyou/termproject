@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>mypage</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100&display=swap" rel="stylesheet">
+
+    <style>
+
+        * {
+            font-family: 'Koulen', cursive;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .title {
+            font-size: 60px;
+        }
+
+        .textbox1 {
+
+            font-size: 30px;
+            margin-top: 10px;
+        }
+
+        .match {
+            height: 300px;
+            width: 500px;
+            background-color: blue;
+            margin: auto;
+            margin-top: 10px;
+        }
+
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            get_matching()
+        });
+
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/login"
+        }
+
+        function get_matching() {
+            $.ajax({
+                type: "GET",
+                url: "/matching",
+                data: {},
+                success: function (response) {
+                    let rows = response['matches']
+                    for (let i = 0; i < rows.length; i++) {
+                        let Group = rows[i]['Group']
+                        let Title = rows[i]['Title']
+                        let schedule = rows[i]['schedule']
+                        let location = rows[i]['location']
+                        let Team1 = rows[i]['Team1']
+                        let Team2 = rows[i]['Team2']
+
+                        let temp_html = `
+                        <tr>
+                    <td>
+                        ${Group}
+                    </td>
+                    <td>
+                        ${Title}
+                    </td>
+                    <td>
+                        ${schedule}
+                    </td>
+                    <td>
+                        ${location}
+                     </td>
+                       <td>
+                        ${Team1}
+                     </td>
+                        <td>
+                        ${Team2}
+                     </td>
+                     </tr>
+                        `
+                        $("#match").append(temp_html)
+
+                    }
+                }
+            })
+        }
+
+
+        function gotomoreinfo() {
+            window.location.href = '/moreinfo'
+        }
+        function gotoadmin() {
+            window.location.herf='/admin'
+        }
+
+        function posting() {
+            let name = $('#rname').val()
+            let nation = $('#rnation').val()
+            let info = $('#rinfo').val()
+            let file = $('#file')[0].files[0]
+            console.log(name, nation, info)
+
+            let form_data = new FormData()
+
+            form_data.append("file_give", file)
+            form_data.append("name_give", name)
+            form_data.append("nation_give", nation)
+            form_data.append("info_give", info)
+
+
+            $.ajax({
+                type: "POST",
+                url: "/register",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) { // 성공하면
+                    alert(response["msg"]);
+                    window.location.reload()
+                }
+            })
+
+        }
+
+    </script>
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <div id="navMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="/">
+                    Home
+                </a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+
+                        <a class="button is-dark" href="/login">login</a>
+
+                        <a class="button is-dark" onclick="sign_out()">Logout</a>
+
+                        <a class="button is-link" href="/mypage">mypage</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="hero is-danger is-bold has-text-centered">
+    <div class="hero-body">
+        <p class="title">
+            Hello
+        </p>
+    </div>
+</section>
+
+<section class="hero is-danger  has-text-centered is-fullheight is-bold">
+
+
+    <div style="margin-top: 30px">
+        <h1 class="textbox1">register player</h1>
+        <button class="button is-danger is-light " onclick="$('#registermodal').addClass('is-active')"> Click here
+        </button>
+        {# <h1 class="textbox1"> sports news </h1>#}
+        {#
+        <button class="button is-danger is-light " onclick="$('#newsmodal').addClass('is-active')"> Click here</button>
+        #}
+        {##}
+        {# <h1 class="textbox1"> matches</h1>#}
+        {#
+        <button class="button is-danger is-light " onclick="$('#matchmodal').addClass('is-active')"> Click here</button>
+        #}
+        <h1 class="textbox1"> More Info </h1>
+        <button class="button is-danger is-light " onclick="gotomoreinfo()"><a href="/moreinfo"></a> Click here</button>
+        <h1 class="textbox1"> Match Info </h1>
+        <button class="button is-danger is-light " onclick="$('#matchmodal').addClass('is-active')">Click here</button>
+
+
+        <div id="registermodal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Register Player</p>
+                    <button class="delete" aria-label="close" onclick="window.location.href='/mypage'"></button>
+                </header>
+
+                <section>
+                    <p1> Name</p1>
+
+                    <input id="rname" class="input is-info" type="text" placeholder="Name">
+
+                    <p1> Nation</p1>
+
+                    <input id="rnation" class="input is-info" type="text" placeholder="Nation">
+
+                    <p1> Info</p1>
+
+                    <textarea id="rinfo" class="textarea" placeholder="Infomation"></textarea>
+
+                    <p1> File</p1>
+
+                    <div class="file has-name is-fullwidth">
+                        <label class="file-label">
+                            <input id="file" class="file-input" type="file" name="resume">
+                            <span class="file-cta">
+      <span class="file-icon">
+        <i class="fas fa-upload"></i>
+      </span>
+      <span class="file-label">
+        Picture
+      </span>
+    </span>
+                            <span class="file-name">
+      choose player appearance
+                        </span>
+                        </label>
+                    </div>
+                </section>
+
+                <footer class="modal-card-foot">
+                    <button class="button is-dark" onclick="posting()">register</button>
+                    <button class="button" onclick="window.location.href='/mypage'">Cancel</button>
+                </footer>
+            </div>
+        </div>
+        <div id="matchmodal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Match Info</p>
+                    <button class="delete" aria-label="close"
+                            onclick="$('#matchmodal').removeClass('is-active')"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div>
+                        <div class="match">
+                            <table class="table is-striped " id="match">
+                                <thead>
+                                <tr>
+                                    <th> Group</th>
+                                    <th> Title</th>
+                                    <th> schedule</th>
+                                    <th> location</th>
+                                    <th> Team1</th>
+                                    <th> Team2</th>
+
+                                </tr>
+                                </thead>
+
+
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button" onclick="$('#matchmodal').removeClass('is-active')">Cancel</button>
+                </footer>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</section>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <title>admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100&display=swap" rel="stylesheet">
+
+    <style>
+        .title {
+            margin: auto;
+            align-text: center;
+        }
+
+        .content {
+            width: 500px;
+            height: 700px;
+
+            margin: auto;
+
+        }
+    </style>
+
+    <script>
+        function Insert() {
+            console.log("insert 실행")
+            $.ajax({
+                type: "POST",
+                url: "/InsertMainPlayer",
+                data: {
+                    Player_give: $("#Player").val(),
+                    Nation_give: $("#Nation").val(),
+                    Group_give: $("#Group").val(),
+                    No_give: $("#No").val(),
+                    Pos_give: $("#Pos").val(),
+                    Age_give: $("#Age").val(),
+                    Amatchcaps_give: $("#Amatchcaps").val(),
+                    Amatchgoals_give: $("#Amatchgoals").val(),
+                    Club_give: $("#Club").val(),
+                    Image_url_give: $("#Image_url").val(),
+                },
+                success: function (response) {
+                    window.location.reload()
+                    alert(response['msg'])
+                    console.log(response['msg'])
+
+                }
+            });
+        }
+
+        function searching() {
+            let p = $("#P").val()
+            console.log(p)
+            $.ajax({
+                type: "POST",
+                url: "/UpdateI",
+                data: {
+                    player_give1: p
+                },
+                success: function (response) {
+                    $("#Update-box").empty()
+                    alert(response['msg'])
+                    let rows = response['info']
+                    console.log(rows)
+                    for (let i = 0; i < rows.length; i++) {
+                        let Player = rows[i]['Player']
+                        let Nation = rows[i]['Nation']
+                        let Group = rows[i]['GROUP']
+                        let No = rows[i]['No']
+                        let Pos = rows[i]['Pos']
+                        let Age = rows[i]['Age']
+                        let Amatchcaps = rows[i]['A match caps']
+                        let Amatchgoals = rows[i]['A match goals']
+                        let Club = rows[i]['Club']
+                        let Image_url = rows[i]['image_url']
+
+                        let temp_html = `
+                    <div> Player
+                <input class="input is-primary" type="text" id="Player1" placeholder="">
+                Nation
+                <input class="input is-primary" type="text" id="Nation1" placeholder="">
+                Group
+                <input class="input is-primary" type="text" id="Group1" placeholder="">
+                No.
+                <input class="input is-primary" type="text" id="No1" placeholder="">
+                Pos
+                <input class="input is-primary" type="text" id="Pos1" placeholder="">
+                Age
+                <input class="input is-primary" type="text" id="Age1" placeholder="">
+                A match caps
+                <input class="input is-primary" type="text" id="Amatchcaps1" placeholder="">
+                A match goals
+                <input class="input is-primary" type="text" id="Amatchgoals1" placeholder="">
+                Club
+                <input class="input is-primary" type="text" id="Club1" placeholder="">
+                image_url
+                <input class="input is-primary" type="text" id="Image_url1" placeholder="">
+            </div>
+`
+                        $("#Update-box").append(temp_html)
+
+                        $("#Player1").val(Player)
+                        $("#Nation1").val(Nation)
+                        $("#Group1").val(Group)
+                        $("#No1").val(No)
+                        $("#Pos1").val(Pos)
+                        $("#Age1").val(Age)
+                        $("#Amatchcaps1").val(Amatchcaps)
+                        $("#Amatchgoals1").val(Amatchgoals)
+                        $("#Club1").val(Club)
+                        $("#Image_url1").val(Image_url)
+
+                    }
+                }
+            });
+
+
+        }
+
+        function Updatepage1() {
+            $("#Update-box").empty()
+            $.ajax({
+                type: "POST",
+                url: "/UpdateMainPlayerInfo",
+                data: {
+                    p_give: $("#P").val(),
+                },
+                success: function (response) {
+                    alert(response['msg'])
+                    let Player = response['info']['Player']
+                    let Nation = response['info']['Nation']
+                    let Group = response['info']['Group ']
+                    let No = response['info']['No']
+                    let Pos = response['info']['Pos']
+                    let Age = response['info']['Age']
+                    let Amatchcaps = response['info']['A match caps']
+                    let Amatchgoals = response['info']['A match goals']
+                    let Club = response['info']['Club']
+                    let Image_url = response['info']['Image_url']
+
+                    let temp_html = `
+                    <div> Player
+                <input class="input is-primary" type="text" id="Player1" placeholder="">
+                Nation
+                <input class="input is-primary" type="text" id="Nation1" placeholder="">
+                Group
+                <input class="input is-primary" type="text" id="Group1" placeholder="">
+                No.
+                <input class="input is-primary" type="text" id="No1" placeholder="">
+                Pos
+                <input class="input is-primary" type="text" id="Pos1" placeholder="">
+                Age
+                <input class="input is-primary" type="text" id="Age1" placeholder="">
+                A match caps
+                <input class="input is-primary" type="text" id="Amatchcaps1" placeholder="">
+                A match goals
+                <input class="input is-primary" type="text" id="Amatchgoals1" placeholder="">
+                Club
+                <input class="input is-primary" type="text" id="Club1" placeholder="">
+                image_url
+                <input class="input is-primary" type="text" id="Image_url1" placeholder="">
+            </div>
+`
+                    $("#Update-box").append(temp_html)
+
+                    $("#Player1").val(Player)
+                    $("#Nation1").val(Nation)
+                    $("#Group1").val(Group)
+                    $("#No1").val(No)
+                    $("#Pos1").val(Pos)
+                    $("#Age1").val(Age)
+                    $("#Amatchcaps1").val(Amatchcaps)
+                    $("#Amatchgoals1").val(Amatchgoals)
+                    $("#Club").val(Club)
+                    $("#Image_url1").val(Image_url)
+
+
+                }
+            });
+        }
+
+        function Update() {
+            $.ajax({
+                type: "POST",
+                url: "/UpdateMainPlayer",
+                data: {
+                    Player_give: $("#Player1").val(),
+                    Nation_give: $("#Nation1").val(),
+                    Group_give: $("#Group1").val(),
+                    No_give: $("#No1").val(),
+                    Pos_give: $("#Pos1").val(),
+                    Age_give: $("#Age1").val(),
+                    Amatchcaps_give: $("#Amatchcaps1").val(),
+                    Amatchgoals_give: $("#Amatchgoals1").val(),
+                    Club_give: $("#Club1").val(),
+                    Image_url_give: $("#Image_url1").val(),
+                },
+                success: function (response) {
+                    window.location.reload()
+                    alert(response['msg'])
+
+                }
+            });
+        }
+
+        function Delete() {
+            $.ajax({
+                type: "POST",
+                url: "/DeleteMainPlayer",
+                data: {
+                    Player_give: $("#player2").val()
+                },
+                success: function (response) {
+                    window.location.reload()
+                    alert(response['msg'])
+                    console.log(response['msg'])
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <div id="navMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href='/'>
+                    Home
+                </a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-link" href='/mypage'>mypage</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<section class="has-text-centered">
+    <div>
+        <h1 class="title is-1"> Admin </h1>
+    </div>
+
+    <div class="content">
+        <div>
+            <button class="button is-primary" style="margin-top: 20px" onclick="$('#insert').addClass('is-active')">
+                Insert
+            </button>
+        </div>
+        <div>
+            <button class="button is-primary" style="margin-top: 20px" onclick="$('#update').addClass('is-active')">
+                Update
+            </button>
+        </div>
+        <div>
+            <button class="button is-primary" style="margin-top: 20px" onclick="$('#delete').addClass('is-active')">
+                Delete
+            </button>
+        </div>
+    </div>
+</section>
+#insert
+<div class="modal" id="insert">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Insert</p>
+            <button class="delete" aria-label="close" onclick="$('#insert').removeClass('is-active')"></button>
+        </header>
+        <section class="modal-card-body">
+            <div> Player
+                <input class="input is-primary" type="text" id="Player">
+                Nation
+                <input class="input is-primary" type="text" id="Nation">
+                Group
+                <input class="input is-primary" type="text" id="Group">
+                No.
+                <input class="input is-primary" type="text" id="No">
+                Pos
+                <input class="input is-primary" type="text" id="Pos">
+                Age
+                <input class="input is-primary" type="text" id="Age">
+                A match caps
+                <input class="input is-primary" type="text" id="Amatchcaps">
+                A match goals
+                <input class="input is-primary" type="text" id="Amatchgoals">
+                Club
+                <input class="input is-primary" type="text" id="Club">
+                image_url
+                <input class="input is-primary" type="text" id="Image_url">
+            </div>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success" onclick="Insert()">Insert</button>
+            <button class="button" onclick="$('#insert').removeClass('is-active')">Cancel</button>
+        </footer>
+    </div>
+</div>
+# delete
+<div class="modal" id="delete">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Delete</p>
+            <button class="delete" aria-label="close" onclick="$('#delete').removeClass('is-active')"></button>
+        </header>
+        <section class="modal-card-body">
+            * 삭제할 플레이어의 이름을 입력해 주세요!
+            <input class="input" type="text" placeholder="Player Name" id="player2">
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success" onclick="Delete()">Delete Player</button>
+            <button class="button" onclick="$('#delete').removeClass('is-active')">Cancel</button>
+        </footer>
+    </div>
+</div>
+#update
+<div class="modal" id="update">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Update</p>
+            <button class="delete" aria-label="close" onclick="$('#update').removeClass('is-active')"></button>
+        </header>
+        <section class="modal-card-body">
+            <div id="Update-box">
+                Update할 Player를 검색해 주세요!
+                <input class="input is-primary" type="text" id="P">
+                <button class="button is-primary is-light" onclick="searching()"> Search</button>
+
+                <!--                <div> Player-->
+                <!--                     <input class="input is-primary" type="text" id="Player1" placeholder="">-->
+                <!--                     Nation-->
+                <!--                     <input class="input is-primary" type="text" id="Nation1" placeholder="">-->
+                <!--                     Group-->
+                <!--                     <input class="input is-primary" type="text" id="Group1" placeholder="">-->
+                <!--                     No.-->
+                <!--                     <input class="input is-primary" type="text" id="No1" placeholder="">-->
+                <!--                     Pos-->
+                <!--                     <input class="input is-primary" type="text" id="Pos1" placeholder="">-->
+                <!--                     Age-->
+                <!--                     <input class="input is-primary" type="text" id="Age1" placeholder="">-->
+                <!--                     A match caps-->
+                <!--                     <input class="input is-primary" type="text" id="Amatchcaps1" placeholder="">-->
+                <!--                     A match goals-->
+                <!--                     <input class="input is-primary" type="text" id="Amatchgoals1" placeholder="">-->
+                <!--                    Club-->
+                <!--                     <input class="input is-primary" type="text" id="Club1" placeholder="">-->
+                <!--                    image_url-->
+                <!--                    <input class="input is-primary" type="text" id="Image_url1" placeholder="">-->
+
+                <!--                </div>-->
+            </div>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success" onclick="Update()">Update</button>
+            <button class="button" onclick="$('#update').removeClass('is-active')">Cancel</button>
+        </footer>
+    </div>
+</div>
+
+</body>
+</html>
+
+

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Sign Up</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Koulen', cursive;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .margintop20 {
+            margin-top: 50px;
+            width: 50%;
+            height: 30%;
+            align-self: center;
+        }
+
+        .centered {
+            align-content: center;
+        }
+
+    </style>
+
+    <script>
+        function sign_up() {
+            let username = $('#username').val()
+            let password = $('#password1').val()
+            let password2 = $('#password2').val()
+            let birth = $('#birth').val()
+            let name = $('#name').val()
+
+            console.log(username, password, password2)
+
+            if ($("#help-id").hasClass("is-danger")) {
+                alert("아이디를 다시 확인해주세요.")
+                return;
+            } else if (!$("#help-id").hasClass("is-success")) {
+                alert("아이디 중복확인을 해주세요.")
+                return;
+            }
+            if (!is_birth(birth)) {
+                $("#help-birth").text("생년월일 형식을 확인해 주세요 예)20010211").removeClass("is-safe").addClass("is-danger")
+                return;
+            } else {
+                $("#help-birth").text("생년월일 확인").removeClass("is-danger").addClass("is-success")
+            }
+
+            if (password == "") {
+                $("#help-password").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#password1").focus()
+                return;
+            } else if (!is_password(password)) {
+                $("#help-password").text("비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").removeClass("is-safe").addClass("is-danger")
+                $("#password1").focus()
+                return
+            } else {
+                $("#help-password").text("사용할 수 있는 비밀번호입니다.").removeClass("is-danger").addClass("is-success")
+            }
+
+            if (password2 == "") {
+                $("#help-password2").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#password2").focus()
+                return;
+            } else if (password2 != password) {
+                $("#help-password2").text("비밀번호가 일치하지 않습니다.").removeClass("is-safe").addClass("is-danger")
+                $("#password2").focus()
+                return;
+            } else {
+                $("#help-password2").text("비밀번호가 일치합니다.").removeClass("is-danger").addClass("is-success")
+            }
+            $.ajax({
+                type: "POST",
+                url: "/sign_up/save",
+                data: {
+                    username_give: username,
+                    password_give: password,
+                    nickname_give: name,
+                    birth_give: birth,
+                },
+                success: function (response) {
+                    alert("회원가입!")
+                    window.location.replace("/login")
+                }
+            });
+
+        }
+
+        function check_dup() {
+            let username = $('#username').val()
+            console.log(username)
+
+            if (username == "") {
+                $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#username").focus()
+                return;
+            }
+            if (!is_nickname(username)) {
+                $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")
+                $("#username").focus()
+                return;
+            }
+            $("#help-id").addClass("is-loading")
+            $.ajax({
+                type: "POST",
+                url: "/sign_up/check_dup",
+                data: {
+                    username_give: username
+                },
+                success: function (response) {
+                    if (response["exists"]) {
+                        $("#help-id").text("이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")
+                        $("#username").focus()
+                    } else {
+                        $("#help-id").text("사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")
+                    }
+                    $("#help-id").removeClass("is-loading")
+
+                }
+            });
+        }
+
+
+        function is_nickname(asValue) {
+            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+            return regExp.test(asValue);
+        }
+
+        function is_password(asValue) {
+            var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+            return regExp.test(asValue);
+        }
+
+        function is_birth(asValue) {
+            var regExp = /^(19[0-9][0-9]|20\d{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])$/;
+            return regExp.test(asValue);
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <div id="navMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="/">
+                    Home
+                </a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-dark" href="/login">login</a>
+                        <a class="button is-link" href="/mypage">mypage</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div></div>
+<section class="hero has-text-centered is-primary is-bold">
+    <div class="hero-body">
+        <p class="title">
+            register page
+        </p>
+
+    </div>
+</section>
+<section class="hero is-link is-fullheight-with-navbar has-background-primary-dark ">
+
+
+    <div class="box margintop20">
+
+
+        <div class="field">
+            <label class="label">ID</label>
+            <div class="field centered has-addons">
+                <div class="control" style="width:100%">
+                    <input id="username" class="input" type="text" placeholder="">
+                </div>
+                <div id="check-dup" class="control">
+                    <button class="button is-sparta" onclick="check_dup()">중복확인</button>
+                </div>
+            </div>
+            <p id="help-id" class="help">아이디는 2-10자의 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.</p>
+
+            <div>
+                <label class="label">Name</label>
+                <div class="control">
+                    <input id="name" class="input" type="text" placeholder="">
+                </div>
+            </div>
+
+            <div>
+                <label class="label">Birth</label>
+                <div class="control">
+                    <input id="birth" class="input" type="text" placeholder="생년월일 6글자로 입력해주세요. 예)20010211">
+                </div>
+            </div>
+            <p id="help-birth" class="help"></p>
+            <div>
+                <label class="label">Password</label>
+                <div class="control">
+                    <input id="password1" class="input" type="password" placeholder="">
+                </div>
+            </div>
+
+            <p id="help-password" class="help">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용
+                가능합니다.</p>
+
+
+            <div class="">
+                <label class="label">Password2 </label>
+                <div class="control">
+                    <input id="password2" class="input" type="password" placeholder="">
+                </div>
+
+            </div>
+            <p id="help-password2" class="help">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용 가능합니다.</p>
+
+        </div>
+
+
+        <hr>
+
+        <button class="button is-info is-rounded" onclick="sign_up()">회원가입</button>
+
+        <button class="button is-info is-outlined is-rounded"><a href="/login">로그인하러 가기</a></button>
+    </div>
+
+
+</section>
+
+</body>
+</html>

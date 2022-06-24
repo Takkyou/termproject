@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Koulen', cursive;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .title {
+            margin-top: 30px;
+            text-align: center;
+
+        }
+
+        .card-box {
+            display: grid;
+            gap: 50px;
+            grid-template-columns: auto auto auto;
+            padding: 10px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            listing()
+        });
+
+        function remove() {
+            $.ajax({
+                type: "POST",
+                url: "/searching_in",
+                data: {
+                    number_give: $('#number').val(),
+                },
+                success: function (response) {
+                    window.location.reload()
+                    console.log(response['number'])
+                }
+            })
+        }
+
+        function listing() {
+            $.ajax({
+                type: "GET",
+                url: '/myplayerregister',
+                data: {},
+                success: function (response) {
+                    console.log(response['msg'])
+                    let rows = response['all_information']
+                    for (let i = 0; i < rows.length; i++) {
+                        let name = rows[i]['name']
+                        let nation = rows[i]['nation']
+                        let info = rows[i]['info']
+                        let file = rows[i]['file']
+                        let no = rows[i]['no']
+                        console.log(name)
+                        let temp = `
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="../static/${file}" alt="Placeholder image">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <div class="media">
+
+                                    <div class="media-content">
+                                        <p class="title is-4">${name}</p>
+                                        <p class="subtitle is-6">${nation}</p>
+                                    </div>
+                                </div>
+
+                                <div class="content">
+                                  ${info}
+                                </div>
+                                <div id=> #<span id="number">${no}<span> </div>
+
+                            </div>
+                        </div>
+                        `
+
+                        $('#card-box1').append(temp)
+                    }
+                }
+            })
+        }
+    </script>
+</head>
+
+<body>
+<nav class="navbar">
+    <div class="container">
+        <div id="navMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href='/'>
+                    Home
+                </a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-link" href='/mypage'>mypage</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="title">
+    <p class="has-text-black">More info player</p>
+</div>
+
+<div id='card-box1' class="card-box">
+
+
+</div>
+
+
+</body>
+</html>
